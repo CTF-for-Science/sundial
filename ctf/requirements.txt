@@ -1,0 +1,9 @@
+# conda create -n ctf-sundial
+# conda activate ctf-sundial
+# conda install Python=3.10
+
+numpy
+transformers[torch]==4.40.1
+scipy
+matplotlib
+IPykernel
