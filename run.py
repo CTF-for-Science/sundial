@@ -9,6 +9,9 @@ import time
 import numpy as np
 from tqdm import tqdm
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import argparse
 
 def main(args=None):
@@ -24,18 +27,17 @@ def main(args=None):
     num_samples = args.num_samples
     batch_size = args.spatial_batch
 
-    path_res = f"{dataset_name}/"
+    path_res = f"Results/{dataset_name}/"
     os.makedirs(path_res, exist_ok=True)
 
     execution_time = time.time()
 
-    for pair_id in range(1,10):
+    for pair_id in range(1, 10):
 
         print(f"Processing pair_id: {pair_id}")
 
         train_data, init_data = load_dataset(dataset_name, pair_id=pair_id)
         forecast_length = get_prediction_timesteps(dataset_name, pair_id).shape[0]
-
 
         if pair_id in [2, 4]:
             recon_ctx = 1000
@@ -70,12 +72,12 @@ def main(args=None):
             pred_mat = pred_data.mean(axis=1).T
 
         # Evaluate the performance (mean prediction over samples)
-        results = evaluate(dataset_name, pair_id, pred_mat)
+        if dataset_name in ['PDE_KS', 'ODE_Lorenz']:
+            results = evaluate(dataset_name, pair_id, pred_mat)
+        else:
+            results = None
 
         # Save results
-        print(f"> Prediction matrix shape: {pred_mat.shape}")
-        print(f"> Results: {results}")
-
         pickle.dump({
             'model_name': model_name,
             'dataset_name': dataset_name,
@@ -83,7 +85,7 @@ def main(args=None):
             'pred_mat': pred_mat,
             'pred_shape': pred_data.shape,
             'results': results
-        }, open(f"{dataset_name}/pair_{pair_id}_results.pkl", "wb"))
+        }, open(f"Results/{dataset_name}/pair_{pair_id}_results.pkl", "wb"))
 
         print(' ')
 
