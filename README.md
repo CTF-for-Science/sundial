@@ -38,15 +38,31 @@ Then install the ctf4science package from the git repository.
 
 ## How to Run
 
-Both the jupyter notebook and the python script can be used to run the model.
-
 Running the .py file:
 
 ```bash
-python run.py --dataset ODE_Lorenz --spatial_batch 3 --num_samples 1
+python run.py config_Lorenz.yaml
 ```
 
-where:
-- `--dataset` specifies the dataset to run (e.g., ODE_Lorenz or PDE_KS).
-- `--spatial_batch` specifies the number of 'spatial' batches to run (required if the GPU is too small).
-- `--num_samples` defines the number of samples to generate for each prediction (for confidence intervals of the foundation model).
+Example of config file:
+
+```yaml
+
+dataset:
+  name: PDE_KS
+  pair_id:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+model:
+  name: sundial
+  num_samples: 5
+  spatial_batch: 10
+
+```
